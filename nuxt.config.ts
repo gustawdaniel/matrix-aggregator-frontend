@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: {enabled: true},
-    modules: ['@nuxtjs/tailwindcss', '@nuxt/content', '@pinia/nuxt'],
+    modules: ['@nuxtjs/tailwindcss', '@nuxt/content', '@pinia/nuxt', '@nuxthub/core'],
     css: [],
     nitro: {
         externals: {
@@ -10,7 +10,7 @@ export default defineNuxtConfig({
         },
     },
     hub: {
-        database: true
+        remote: true
     },
     tailwindcss: {
         // cssPath: '~/assets/css/tailwind.css', // Path to your Tailwind CSS file
