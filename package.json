@@ -19,7 +19,7 @@
     "@types/markdown-it": "^14.1.2",
     "dayjs": "^1.11.13",
     "markdown-it": "^14.1.0",
-    "mongodb": "^4.13.0",
+    "mongodb": "^6.10.0",
     "nuxt": "^3.14.159",
     "pinia": "^2.2.6",
     "vue": "latest",
