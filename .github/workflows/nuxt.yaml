@@ -55,5 +55,5 @@ jobs:
             127.0.0.1 env=prod
             
             [api]
-            matrix.preciselab.io ansible_user=root dir=front
+            matrix.preciselab.io ansible_user=root dir=matrix-aggregator-front
     needs: image
