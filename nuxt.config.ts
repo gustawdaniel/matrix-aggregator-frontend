@@ -4,13 +4,11 @@ export default defineNuxtConfig({
     devtools: {enabled: true},
     modules: ['@nuxtjs/tailwindcss', '@nuxt/content', '@pinia/nuxt'],
     css: [],
-    // app: {
-    //     head: {
-    //         link: [{
-    //             rel: 'stylesheet', href: 'https://unpkg.com/vue-multiselect/dist/vue-multiselect.min.css'
-    //         }]
-    //     }
-    // },
+    nitro: {
+        externals: {
+            inline: ['@aws-sdk/credential-providers'],
+        },
+    },
     tailwindcss: {
         // cssPath: '~/assets/css/tailwind.css', // Path to your Tailwind CSS file
         config: {
