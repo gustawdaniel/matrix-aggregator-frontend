@@ -9,6 +9,9 @@ export default defineNuxtConfig({
             inline: ['@aws-sdk/credential-providers'],
         },
     },
+    hub: {
+        database: true
+    },
     tailwindcss: {
         // cssPath: '~/assets/css/tailwind.css', // Path to your Tailwind CSS file
         config: {
