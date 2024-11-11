@@ -37,7 +37,7 @@ jobs:
           ENV=$(cat << EOF
           VIRTUAL_HOST=matrix.preciselab.io
           LETSENCRYPT_HOST=matrix.preciselab.io
-          VIRTUAL_PORT=3200
+          VIRTUAL_PORT=3400
           NITRO_HOST=0.0.0.0
           NITRO_PORT=3400
           EOF

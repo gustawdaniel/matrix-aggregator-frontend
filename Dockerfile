@@ -2,8 +2,15 @@ FROM node:22-alpine
 
 WORKDIR /opt/app
 
-COPY ./package.json ./package-lock.json ./
-RUN npm ci
+# Enable Corepack and use pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY ./package.json ./pnpm-lock.yaml ./
+
+# Install dependencies using pnpm
+RUN pnpm install --frozen-lockfile
+
 COPY ./ .
-RUN npx prisma generate
+
+# Build the project
 RUN npm run build
