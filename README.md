@@ -8,6 +8,10 @@ npx nuxi@latest init .
 
 https://www.firecrawl.dev/app/settings
 
+## MongoDB
+
+> gustaw.daniel+aic@gmail.com
+
 ## API
 
 Add tag

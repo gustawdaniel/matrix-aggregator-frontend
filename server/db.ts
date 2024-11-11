@@ -5,5 +5,5 @@ export async function connectDb(): Promise<Db> {
     const client = new MongoClient(mongoUri, {ignoreUndefined: true});
 
     await client.connect();
-    return client.db('scraped_data');
+    return client.db('matrix_aggregator');
 }
