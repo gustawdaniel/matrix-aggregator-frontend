@@ -2,13 +2,10 @@ import { connectDb } from "~/server/db";
 import { ObjectId } from "mongodb";
 
 export default defineEventHandler(async (event) => {
-  console.log(1);
   const { art_id } = event.context.params ?? {}; // Article and Tag IDs from URL params
   const tagsString = await readBody(event); // `significance` from the request body
 
   const tags = JSON.parse(tagsString);
-
-  console.log("tags", tags, Array.isArray(tags), typeof tags);
 
   if (!Array.isArray(tags)) {
     return { statusCode: 400, body: { error: "Tags must be an array" } };
@@ -18,7 +15,6 @@ export default defineEventHandler(async (event) => {
     return { statusCode: 400, body: { error: "Missing required parameters" } };
   }
 
-  console.log(2);
   const db = await connectDb();
 
   // Connect to MongoDB
@@ -33,8 +29,6 @@ export default defineEventHandler(async (event) => {
   if (!article) {
     return { statusCode: 404, body: { error: `Article ${art_id} not found` } };
   }
-
-  console.log(3);
 
   try {
     await articlesCollection.updateOne(

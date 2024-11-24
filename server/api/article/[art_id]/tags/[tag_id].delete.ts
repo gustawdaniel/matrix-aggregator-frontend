@@ -30,9 +30,6 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    console.log("article.tags", article.tags);
-    console.log("tagObjectId", tagObjectId);
-
     // Filter out the tag with the given tag_id
     const updatedTags = article.tags.filter(
       (tag: { tag_id: ObjectId }) => !tag.tag_id.equals(tagObjectId),

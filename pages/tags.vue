@@ -105,8 +105,6 @@ const removeTag = async (tagId: string) => {
 };
 
 onMounted(async () => {
-  console.log(1);
   await tagStore.fetchTags();
-  console.log(2);
 });
 </script>

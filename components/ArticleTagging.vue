@@ -32,11 +32,7 @@ const selectedTags = computed<Tag[]>({
 
 // Method to add a new tag
 const addTag = async (newTag: string) => {
-  console.log("new", newTag);
-
   const tag = await tagStore.addTag(newTag, "#dbdbdb");
-
-  console.log("tag", tag);
 
   if (!tag) {
     return alert("Failed to add tag");
@@ -47,18 +43,13 @@ const addTag = async (newTag: string) => {
 };
 
 watch(tags, async (newTags, oldValue) => {
-  console.log("newTags, oldValue", newTags, oldValue);
-
   try {
     const res = await fetch(`/api/article/${props.articleId}/tags`, {
       method: "PUT",
       body: JSON.stringify(newTags),
     });
 
-    console.log(res);
-
     const data = await res.json();
-    console.log(data);
   } catch (e) {
     console.log(e);
   }

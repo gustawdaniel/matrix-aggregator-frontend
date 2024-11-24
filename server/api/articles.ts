@@ -1,53 +1,72 @@
-import { MongoClient } from "mongodb";
-import type { ArticleMetadata } from "~/types/ArticleMetadata";
-import { Article } from "~/types/Article";
-import { connectDb } from "~/server/db";
+import {Document, Filter, MongoClient, ObjectId} from "mongodb";
+import type {ArticleMetadata} from "~/types/ArticleMetadata";
+import {Article} from "~/types/Article";
+import {connectDb} from "~/server/db";
 
 interface Pagination {
-  page: number;
-  limit: number;
-  totalCount: number;
-  totalPages: number;
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
 }
 
 export default defineEventHandler(async (event) => {
-  try {
-    // Read query parameters for pagination
-    const { page, limit } =
-      event.req.url && event.req.url.includes("?")
-        ? Object.fromEntries(
-            new URLSearchParams(event.req.url.split("?")[1]).entries(),
-          )
-        : { page: "1", limit: "10" };
+    try {
+        // Read query parameters for pagination
+        const {page, limit, search, tags, date} =
+            event.req.url && event.req.url.includes("?")
+                ? Object.fromEntries(
+                    new URLSearchParams(event.req.url.split("?")[1]).entries(),
+                )
+                : {page: "1", limit: "10", search: '', tags: '', date: ''};
 
-    const parsedPage = parseInt(page, 10);
-    const parsedLimit = parseInt(limit, 10);
+        const parsedPage = parseInt(page, 10);
+        const parsedLimit = parseInt(limit, 10);
 
-    const skip = (Number(page) - 1) * Number(limit);
+        const skip = (Number(page) - 1) * Number(limit);
 
-    const db = await connectDb();
-    const collection = db.collection("raw_articles");
+        const db = await connectDb();
+        const collection = db.collection("raw_articles");
 
-    // Fetch articles with pagination
-    const articles: Article[] = await collection
-      .find<Article>({})
-      .skip(skip)
-      .limit(Number(limit))
-      .toArray();
+        const where: Filter<Document>= {};
 
-    const totalCount = await collection.countDocuments();
+        if (search) {
+            where['metadata.title'] = {$regex: search, $options: 'i'};
+        }
 
-    const pagination: Pagination = {
-      page: Number(page),
-      limit: Number(limit),
-      totalCount,
-      totalPages: Math.ceil(totalCount / Number(limit)),
-    };
+        if(date) {
+            const regex = new RegExp(`^${date}`);
+            where['metadata.article:published_time'] = { $regex: regex };
+        }
 
-    // Respond with articles and pagination info
-    return { articles, pagination };
-  } catch (error) {
-    console.error("Error fetching articles:", error);
-    return { error: "Failed to fetch articles" };
-  }
+        if(tags) {
+            where['tags'] = {
+                $elemMatch: {
+                    tag_id: {$in: tags.split(',').map(tag => new ObjectId(tag))}
+                }
+            }
+        }
+
+        // Fetch articles with pagination
+        const articles: Article[] = await collection
+            .find<Article>(where)
+            .skip(skip)
+            .limit(Number(limit))
+            .toArray();
+
+        const totalCount = await collection.countDocuments(where);
+
+        const pagination: Pagination = {
+            page: Number(page),
+            limit: Number(limit),
+            totalCount,
+            totalPages: Math.ceil(totalCount / Number(limit)),
+        };
+
+        // Respond with articles and pagination info
+        return {articles, pagination};
+    } catch (error) {
+        console.error("Error fetching articles:", error);
+        return {error: "Failed to fetch articles"};
+    }
 });

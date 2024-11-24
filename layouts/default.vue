@@ -2,7 +2,6 @@
 import { useTagStore } from "~/stores/tagStore";
 
 onMounted(() => {
-  console.log(1);
   useTagStore().fetchTags();
 });
 </script>

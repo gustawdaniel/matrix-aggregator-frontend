@@ -17,7 +17,7 @@ const article = props.article;
     </h2>
     <p class="my-2 font-bold">
       {{
-        dayjs(article.metadata["article:published_time"]).format("DD-MM-YYYY")
+        article.metadata["article:published_time"].substring(0, 10)
       }}
     </p>
     <p class="text-gray-700 mt-2">{{ article.metadata.description }}</p>
