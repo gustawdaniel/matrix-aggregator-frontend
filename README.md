@@ -49,3 +49,5 @@ update tags
 ```bash
 echo '[{"tag_id": "6731e9adf915b84eae58a82f", "significance": 0.1}]' | http PUT localhost:3000/api/article/6731c8c55225137f386dfbb5/tags
 ```
+
+http://167.71.52.205:3400/

@@ -1,9 +1,9 @@
-import {connectDb} from "~/server/db";
+import { connectDb } from "~/server/db";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const db = await connectDb();
-  const tagsCollection = db.collection('tags');
+  const tagsCollection = db.collection("tags");
 
   const newTag = {
     name: body.name,

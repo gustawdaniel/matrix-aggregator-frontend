@@ -1,14 +1,14 @@
-version: '3'
+version: "3"
 
 services:
   app:
-#    image: matrix-aggregator-front
+    #    image: matrix-aggregator-front
     image: registry.digitalocean.com/main/matrix-aggregator-front
     ports:
       - "3400:3400"
     env_file:
       - .env
-    command: 'node .output/server/index.mjs'
+    command: "node .output/server/index.mjs"
 
 networks:
   default:

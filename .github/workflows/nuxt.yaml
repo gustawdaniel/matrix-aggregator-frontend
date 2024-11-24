@@ -2,7 +2,7 @@ name: Nuxt
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   DOCKER_REGISTRY_DOMAIN: registry.digitalocean.com
@@ -53,7 +53,7 @@ jobs:
           inventory: |
             [local]
             127.0.0.1 env=prod
-            
+
             [api]
             matrix.preciselab.io ansible_user=root dir=matrix-aggregator-front
     needs: image

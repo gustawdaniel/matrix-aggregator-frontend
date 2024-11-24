@@ -13,4 +13,4 @@ RUN pnpm install --frozen-lockfile
 COPY ./ .
 
 # Build the project
-RUN npm run build
+RUN pnpm build
