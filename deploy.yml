@@ -22,9 +22,11 @@
       shell:
         cmd: touch .env && sort -u -t '=' -k 1,1 .env.pub .env > .env.build && mv .env.build .env
         chdir: "{{ path }}"
-    - name: Reload Compose
-      community.general.docker_compose:
-        pull: yes
-        project_src: "{{ path }}"
-    - name: Remove Old Images
-      shell: docker system prune -af
+    - name:
+      shell:
+        cmd: docker compose pull
+        chdir: "{{ path }}"
+    - name:
+      shell:
+        cmd: docker compose up -d
+        chdir: "{{ path }}"
