@@ -1,13 +1,31 @@
 <script setup lang="ts">
 import dayjs from "dayjs";
 import type { Article } from "~/types/Article";
-import type { WithId } from "mongodb";
+import type { ObjectId, WithId } from "mongodb";
+import { Bot, Loader } from 'lucide-vue-next';
+import { useArticleStore } from "#imports";
+import MarkdownIt from "markdown-it";
 
 const props = defineProps<{
   article: WithId<Article>;
 }>();
 
-const article = props.article;
+const loading = ref(false);
+
+async function createSummary(articleId: string | ObjectId) {
+  const articleStore = useArticleStore();
+  loading.value = true;
+  await articleStore.createSummary(String(articleId));
+  console.log(`Creating summary for article ${articleId}`);
+  loading.value = false;
+}
+
+const md = new MarkdownIt();
+
+const summary = computed(() => {
+  const rawText = props.article.summary ?? props.article.metadata.description;
+  return  md.render(rawText);
+});
 </script>
 
 <template>
@@ -15,12 +33,21 @@ const article = props.article;
     <h2 class="text-2xl font-semibold text-gray-900">
       {{ article.metadata.title }}
     </h2>
-    <p class="my-2 font-bold">
-      {{
-        article.metadata["article:published_time"].substring(0, 10)
-      }}
+    <p class="my-2 font-bold flex justify-between w-full">
+      <span>
+        {{ article.metadata["article:published_time"].substring(0, 10) }}
+      </span>
+      <button class="flex gap-2" @click="createSummary(article._id)">
+        <span>{{article.rawSummaries?.length ?? 0}}</span>
+        <Loader v-if="loading" />
+        <Bot v-else/>
+      </button>
     </p>
-    <p class="text-gray-700 mt-2">{{ article.metadata.description }}</p>
+
+    <p class="text-gray-700 mt-2 prose" v-html="summary"/>
+
+    <TickersReport :tickers="article.tickers"/>
+<!--    <pre>{{article.tickers}}</pre>-->
 
     <nuxt-link
       :to="`/article/${String(article._id)}`"

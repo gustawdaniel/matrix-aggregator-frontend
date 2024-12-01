@@ -6,6 +6,8 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "prettier": "pnpm exec prettier . --write"
@@ -17,9 +19,11 @@
     "@tailwindcss/typography": "^0.5.15",
     "@types/markdown-it": "^14.1.2",
     "dayjs": "^1.11.13",
+    "lucide-vue-next": "^0.462.0",
     "markdown-it": "^14.1.0",
     "mongodb": "^6.10.0",
     "nuxt": "^3.14.159",
+    "openai": "^4.73.1",
     "pinia": "^2.2.6",
     "vue": "latest",
     "vue-multiselect": "^3.1.0",
@@ -28,6 +32,7 @@
   "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee",
   "devDependencies": {
     "prettier": "3.3.3",
+    "vitest": "^2.1.6",
     "wrangler": "^3.86.1"
   }
 }

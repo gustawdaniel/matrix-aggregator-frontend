@@ -62,6 +62,39 @@ export const useArticleStore = defineStore("articles", () => {
         }
     };
 
+    async function createSummary(articleId: string) {
+        try {
+            const res = await $fetch(`/api/article/${articleId}/summary`, {
+                method: 'POST',
+            });
+            const body = res.body;
+
+            if ('summary' in body) {
+
+                const index = articles.value.findIndex(article => String(article._id) === articleId);
+
+                if (index !== -1) {
+                    // Use splice to replace the specific item
+                    articles.value.splice(index, 1, {
+                        ...articles.value[index],
+                        summary: body.summary,
+                        rawSummaries: body.rawSummaries ?? [],
+                        tickers: body.tickers,
+                    });
+                }
+
+                return body.summary ?? '';
+            } else {
+                console.error('Error creating summary:', body);
+                return '';
+            }
+        } catch (err) {
+            console.error('Error creating summary:', err);
+        }
+
+        return '';
+    }
+
     return {
         filter,
         setFilter,
@@ -73,5 +106,7 @@ export const useArticleStore = defineStore("articles", () => {
         error,
         isFetching,
         fetchArticles,
+
+        createSummary,
     };
 });
