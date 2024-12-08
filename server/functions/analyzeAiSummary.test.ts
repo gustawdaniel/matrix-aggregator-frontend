@@ -74,3 +74,27 @@ test("router clears article content", () => {
     ],
   });
 });
+
+const summaryWith3Quotations = `"""
+The article reports on the assassination of UnitedHealth CEO Brian Thompson in a targeted attack in New York City, raising concerns about implications for the company amid ongoing operational challenges.
+
+[
+  {"code": "UNH", "name": "UnitedHealth Group Incorporated", "move": "down", "reason": "The assassination of the CEO may lead to uncertainty and operational disruptions, negatively impacting stock performance."}
+]
+"""
+`;
+
+test("router clears article content", () => {
+  expect(analyzeAiSummary(summaryWith3Quotations)).toStrictEqual({
+    summary:
+      "The article reports on the assassination of UnitedHealth CEO Brian Thompson in a targeted attack in New York City, raising concerns about implications for the company amid ongoing operational challenges.",
+    tickers: [
+      {
+        code: "UNH",
+        name: "UnitedHealth Group Incorporated",
+        move: "down",
+        reason: "The assassination of the CEO may lead to uncertainty and operational disruptions, negatively impacting stock performance.",
+      },
+    ],
+  });
+});

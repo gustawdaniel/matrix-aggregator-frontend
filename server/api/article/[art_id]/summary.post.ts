@@ -6,20 +6,25 @@ import { getOpenApiMessage } from "~/server/ai";
 import { analyzeAiSummary } from "~/server/functions/analyzeAiSummary";
 
 async function getDefaultPersona(): Promise<string> {
-  return `You are a stock marker broker focused on US stocks and commodity markets. You are a professional trader and have a deep understanding of the markets and the stocks. You are also a proficient writer and can write in a concise and clear manner. Your goal is to provide a summary of the article in a short and informative manner, highlighting the most important stock market tickers and their expected price influence. Your summary should be no longer than 100 words.`;
+  return `You are a helpful assistant. Take care about correctness of json format.`;
 }
 
 // TODO: get from database
 async function getDefaultPrompt(): Promise<string> {
-  return `Write max 1 sentence summary of article. Then list JSON array of stock market tickers and expected price influence only if they are significant. Please care about correct JSON structure For example
+  return `"Analyze the uploaded article and perform the following tasks:
+1. Summarize the content in a single sentence.
+2. Identify any U.S. stock tickers (e.g., NASDAQ, NYSE) only if the impact be very significant (more than 5% price change in 1D period) by the information in the article. If not, skip them.
+3. Mark the U.S stock ticker if the information in the article is crucial for the stock (e.g. strike in the factory, death of the CEO etc.)
+4. For each identified ticker, indicate the expected market impact using word (up or down) and provide a brief reason for your assessment."
+
+Output Example:
 
 """
-Japanese PM Shigeru Ishiba will lead a fragile minority government amid rising tensions and economic challenges.
+The article discusses [key topic in one sentence].
 
 [
-  {"code": "TSLA","name":"Tesla", "move": "down", "reason": "trade tension concerns with U.S."},
-  {"code": "TOYOF","name":"Toyota", "move":"down", "reason": "potential trade measures by Trump"},
-  {"code": "SNE", "name":"Sony", "move": "down", "reason": "economic uncertainty"}
+  {"code": "AAPL","name":"Apple Inc.", "move": "up", "reason": "reason"},
+  {"code": "TSLA","name":"Tesla Inc.", "move":"down", "reason": "reason"},
 ]
 """`;
 }
