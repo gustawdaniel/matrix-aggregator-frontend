@@ -3,6 +3,7 @@
     <div class="flex items-center mb-6">
       <h1 class="text-2xl font-semibold text-gray-900">Manage Tags</h1>
       <nuxt-link to="/" class="ml-5">Home</nuxt-link>
+      <nuxt-link to="/prompt" class="ml-5">Prompt</nuxt-link>
     </div>
 
     <!-- Add Tag Section -->

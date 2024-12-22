@@ -28,7 +28,7 @@ export function clearArticleContent(content: string, source: Source) {
 
     for (let line of cleanLines) {
       // skip trash content
-      if (line.endsWith("via Getty Images") || line === "View Comments") {
+      if (line.endsWith("via Getty Images") || line === "View Comments" || /^View Comments (\d+)$/.test(line)) {
         continue;
       }
       // remove more than 2 empty lines

@@ -4,6 +4,7 @@
       <h1 class="text-3xl font-bold">Articles</h1>
 
       <nuxt-link to="/tags">Tags</nuxt-link>
+      <nuxt-link to="/prompt">Prompt</nuxt-link>
 
       <!-- Pagination -->
       <ArticlesPagination />

@@ -5,30 +5,8 @@ import { clearArticleContent } from "~/server/functions/clearArticleContent";
 import { getOpenApiMessage } from "~/server/ai";
 import { analyzeAiSummary } from "~/server/functions/analyzeAiSummary";
 import { getMarkdownContent } from "~/server/functions/getMarkdownContent";
-
-async function getDefaultPersona(): Promise<string> {
-  return `You are a helpful assistant. Take care about correctness of json format.`;
-}
-
-// TODO: get from database
-async function getDefaultPrompt(): Promise<string> {
-  return `"Analyze the uploaded article and perform the following tasks:
-1. Summarize the content in a single sentence.
-2. Identify any U.S. stock tickers (e.g., NASDAQ, NYSE) only if the impact be very significant (more than 5% price change in 1D period) by the information in the article. If not, skip them.
-3. Mark the U.S stock ticker if the information in the article is crucial for the stock (e.g. strike in the factory, death of the CEO etc.)
-4. For each identified ticker, indicate the expected market impact using word (up or down) and provide a brief reason for your assessment."
-
-Output Example:
-
-"""
-The article discusses [key topic in one sentence].
-
-[
-  {"code": "AAPL","name":"Apple Inc.", "move": "up", "reason": "reason"},
-  {"code": "TSLA","name":"Tesla Inc.", "move":"down", "reason": "reason"},
-]
-"""`;
-}
+import { getDefaultPersona } from "~/server/functions/prompt/getDefaultPersona";
+import { getDefaultPrompt } from "~/server/functions/prompt/getDefaultPrompt";
 
 export default defineEventHandler(async (event) => {
   const { art_id } = event.context.params ?? {};
@@ -59,10 +37,10 @@ export default defineEventHandler(async (event) => {
   // }
 
   const summaryWithTickers = await getOpenApiMessage([
-    { role: "system", content: await getDefaultPersona() },
+    { role: "system", content: await getDefaultPersona(db) },
     {
       role: "user",
-      content: await getDefaultPrompt() + '\n\n' + content,
+      content: await getDefaultPrompt(db) + '\n\n' + content,
     },
   ])
 

@@ -21,6 +21,6 @@ export default defineEventHandler(async (event) => {
   }
 
   article.markdown = getMarkdownContent(article.html, article.source);
-
+  article.html = '';
   return article;
 });

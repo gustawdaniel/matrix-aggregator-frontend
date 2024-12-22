@@ -33,6 +33,13 @@ import type { Article } from "~/types/Article";
 onMounted(() => {
   fetchArticle(route.params.id as string);
 });
+
+function getTitle(title: string | string[]): string {
+  if(Array.isArray(title)) {
+    return title.at(-1) ?? '';
+  }
+  return title;
+}
 </script>
 
 <template>
@@ -41,7 +48,7 @@ onMounted(() => {
       <nuxt-link to="/">Home</nuxt-link>
 
       Page: {{ route.params.id }}
-      <h1>{{ article.metadata.title }}</h1>
+      <h1>{{ getTitle(article.metadata.title) }}</h1>
 
       <a
         :href="article.metadata.url"
