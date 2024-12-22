@@ -58,7 +58,6 @@ const getOpacityStyle = (count: number) => {
     opacity: opacity,
   };
 };
-
 </script>
 
 <template>

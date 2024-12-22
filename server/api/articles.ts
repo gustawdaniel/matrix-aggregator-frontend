@@ -50,7 +50,8 @@ export default defineEventHandler(async (event) => {
         // Fetch articles with pagination
         const articles: Article[] = await collection
             .find<Article>(where)
-            .sort({ 'metadata.article:published_time': -1 }) // Use sort as a separate method
+            // .sort({ 'metadata.article:published_time': -1 }) // Use sort as a separate method
+            .sort({ 'createdAt': -1 }) // Use sort as a separate method
             .skip(skip)
             .limit(Number(limit))
             .toArray();

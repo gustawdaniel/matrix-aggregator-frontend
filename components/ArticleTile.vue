@@ -26,6 +26,65 @@ const summary = computed(() => {
   const rawText = props.article.summary ?? props.article.metadata.description;
   return  md.render(rawText);
 });
+
+function dateFromObjectId (objectId: string | ObjectId): string {
+  return new Date(parseInt(String(objectId).substring(0, 8), 16) * 1000).toISOString();
+}
+
+function articleDates(article: WithId<Article>) {
+  const published = article.metadata["article:published_time"] ?? '';
+  const updated = article.metadata["article:modified_time"] ?? '';
+  const created = dateFromObjectId(article._id) ?? '';
+
+  const options: Intl. DateTimeFormatOptions = {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  };
+
+  const formatter = new Intl.DateTimeFormat("sv", options);
+  const publishedNy = published ? formatter.format(new Date(published)) : '';
+  const updatedNY = updated ? formatter.format(new Date(updated)) : '';
+  const createdNY = created ? formatter.format(new Date(created)) : '';
+
+  const lines: string[] = [];
+  if (published) {
+    lines.push(`published: ${published}`);
+  }
+  if (updated) {
+    lines.push(`updated: ${updated}`);
+  }
+  if (created) {
+    lines.push(`downloaded: ${created}`);
+  }
+  if (publishedNy) {
+    lines.push(`\npublished in NY: ${publishedNy}`);
+  }
+  if (updatedNY) {
+    lines.push(`updated in NY: ${updatedNY}`);
+  }
+  if (createdNY) {
+    lines.push(`downloaded in NY: ${createdNY}`);
+  }
+
+  return lines.join('\n');
+}
+
+function mainArticleDate(article: WithId<Article>) {
+  const published = article.metadata["article:published_time"] ?? '';
+
+  if (published) {
+    return published.substring(0, 10)
+  }
+
+  const created = dateFromObjectId(article._id) ?? '';
+
+  return created.substring(0, 10);
+}
 </script>
 
 <template>
@@ -34,8 +93,9 @@ const summary = computed(() => {
       {{ article.metadata.title }}
     </h2>
     <p class="my-2 font-bold flex justify-between w-full">
-      <span>
-        {{ article.metadata["article:published_time"].substring(0, 10) }}
+      <span :title="articleDates(article)" class="flex gap-2">
+        {{ mainArticleDate(article) }}
+        <ArticleSource :source="article.source" />
       </span>
       <button class="flex gap-2" @click="createSummary(article._id)">
         <span>{{article.rawSummaries?.length ?? 0}}</span>

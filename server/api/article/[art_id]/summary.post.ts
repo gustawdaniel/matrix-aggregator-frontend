@@ -4,6 +4,7 @@ import { Article } from "~/types/Article";
 import { clearArticleContent } from "~/server/functions/clearArticleContent";
 import { getOpenApiMessage } from "~/server/ai";
 import { analyzeAiSummary } from "~/server/functions/analyzeAiSummary";
+import { getMarkdownContent } from "~/server/functions/getMarkdownContent";
 
 async function getDefaultPersona(): Promise<string> {
   return `You are a helpful assistant. Take care about correctness of json format.`;
@@ -49,8 +50,9 @@ export default defineEventHandler(async (event) => {
     return { statusCode: 404, body: { error: `Article ${art_id} not found` } };
   }
 
+  const markdown = getMarkdownContent(article.html, article.source);
   // 2 clear article content
-  const content = clearArticleContent(article.markdown, article.source);
+  const content = clearArticleContent(markdown, article.source);
   // 3 create summary
   // if(article.summary) {
   //   return { statusCode: 200, body: { message: `Summary existed for article ${art_id}`, summary: article.summary } };
