@@ -20,7 +20,7 @@ const fetchArticle = async (id: string) => {
     article.value = await response.json();
 
     // Convert Markdown to HTML
-    if (article.value) {
+    if (article.value && article.value?.markdown) {
       htmlContent.value = md.render(article.value?.markdown);
     }
   } catch (error) {

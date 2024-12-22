@@ -1,6 +1,6 @@
 export interface ArticleMetadata {
-  title: string;
-  description: string;
+  title: string | string[];
+  description: string | string[];
   language: string;
   keywords: string;
   robots: string;

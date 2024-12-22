@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { Article } from "~/types/Article";
 import { connectDb } from "~/server/db";
+import { getMarkdownContent } from "~/server/functions/getMarkdownContent";
 
 export default defineEventHandler(async (event) => {
   const params = event.context.params;
@@ -13,5 +14,13 @@ export default defineEventHandler(async (event) => {
   const db = await connectDb();
   const collection = db.collection("raw_articles");
 
-  return await collection.findOne<Article>({ _id: new ObjectId(id) });
+  const article = await collection.findOne<Article>({ _id: new ObjectId(id) });
+
+  if (!article) {
+    return { statusCode: 404, body: { error: `Article ${id} not found` } };
+  }
+
+  article.markdown = getMarkdownContent(article.html, article.source);
+
+  return article;
 });

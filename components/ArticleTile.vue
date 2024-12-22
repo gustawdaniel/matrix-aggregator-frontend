@@ -23,8 +23,22 @@ async function createSummary(articleId: string | ObjectId) {
 const md = new MarkdownIt();
 
 const summary = computed(() => {
-  const rawText = props.article.summary ?? props.article.metadata.description;
-  return  md.render(rawText);
+  const rawTextOrArray = props.article.summary ?? props.article.metadata.description;
+  let rawText = '';
+  if(Array.isArray(rawTextOrArray)) {
+    rawText = rawTextOrArray.at(-1) ?? '';
+  } else {
+    rawText = rawTextOrArray;
+  }
+  if(!rawText) {
+    return '';
+  }
+  console.log('props.article', props.article._id);
+  console.log('props.article.summary', props.article.summary);
+  console.log('props.article.metadata.description', props.article.metadata.description);
+  console.log('rawText', rawText, typeof rawText);
+
+  return md.render(rawText);
 });
 
 function dateFromObjectId (objectId: string | ObjectId): string {
@@ -85,12 +99,19 @@ function mainArticleDate(article: WithId<Article>) {
 
   return created.substring(0, 10);
 }
+
+function getTitle(title: string | string[]): string {
+  if(Array.isArray(title)) {
+    return title.at(-1) ?? '';
+  }
+  return title;
+}
 </script>
 
 <template>
   <div class="bg-white p-6 rounded-lg shadow-lg">
     <h2 class="text-2xl font-semibold text-gray-900">
-      {{ article.metadata.title }}
+      {{ getTitle(article.metadata.title) }}
     </h2>
     <p class="my-2 font-bold flex justify-between w-full">
       <span :title="articleDates(article)" class="flex gap-2">
@@ -106,7 +127,7 @@ function mainArticleDate(article: WithId<Article>) {
 
     <p class="text-gray-700 mt-2 prose" v-html="summary"/>
 
-    <TickersReport :tickers="article.tickers"/>
+    <TickersReport :tickers="article.tickers ?? []"/>
 <!--    <pre>{{article.tickers}}</pre>-->
 
     <nuxt-link
