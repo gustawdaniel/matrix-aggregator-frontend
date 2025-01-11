@@ -7,6 +7,7 @@ import { analyzeAiSummary } from "~/server/functions/analyzeAiSummary";
 import { getMarkdownContent } from "~/server/functions/getMarkdownContent";
 import { getDefaultPersona } from "~/server/functions/prompt/getDefaultPersona";
 import { getDefaultPrompt } from "~/server/functions/prompt/getDefaultPrompt";
+import { getAiContentSummary } from "~/server/functions/getAiContentSummary";
 
 export default defineEventHandler(async (event) => {
   const { art_id } = event.context.params ?? {};
@@ -28,19 +29,21 @@ export default defineEventHandler(async (event) => {
     return { statusCode: 404, body: { error: `Article ${art_id} not found` } };
   }
 
-  const markdown = getMarkdownContent(article.html, article.source);
+  const markdown = article.source === 'finance.yahoo' ?
+    getMarkdownContent(article.html, article.source) : article.markdown;
   // 2 clear article content
   const content = clearArticleContent(markdown, article.source);
   // 3 create summary
   // if(article.summary) {
   //   return { statusCode: 200, body: { message: `Summary existed for article ${art_id}`, summary: article.summary } };
   // }
+  const aiMiddleSizeSummary: string = article.aiMiddleSizeSummary ? article.aiMiddleSizeSummary : await getAiContentSummary(content);
 
   const summaryWithTickers = await getOpenApiMessage([
     { role: "system", content: await getDefaultPersona(db) },
     {
       role: "user",
-      content: await getDefaultPrompt(db) + '\n\n' + content,
+      content: await getDefaultPrompt(db) + '\n\n' + aiMiddleSizeSummary,
     },
   ])
 

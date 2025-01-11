@@ -11,5 +11,6 @@ export interface Article {
   source: Source
   summary?: string; // AI generated summary
   rawSummaries?: string[]; // AI generated summary
-  tickers?: AiSummaryTicker[]
+  tickers?: AiSummaryTicker[];
+  aiMiddleSizeSummary?: string; // generated middleware for further processing
 }
