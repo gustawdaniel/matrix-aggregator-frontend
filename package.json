@@ -21,7 +21,7 @@
     "@types/markdown-it": "^14.1.2",
     "dayjs": "^1.11.13",
     "lucide-vue-next": "^0.462.0",
-    "markdown-it": "^14.1.0",
+    "markdown-it": "^14.1.1",
     "mongodb": "^6.10.0",
     "nuxt": "^3.14.159",
     "openai": "^4.73.1",
